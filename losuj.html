@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Losuję kolor…</title>
+
+  <style>
+    body{
+      margin:0;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      font-family: Arial, sans-serif;
+      background:#f6f6f6;
+      color:#333;
+    }
+    .box{
+      text-align:center;
+      padding:30px;
+      border-radius:20px;
+      background:white;
+      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+    }
+    .loader{
+      margin:18px auto 0;
+      width:32px;
+      height:32px;
+      border:4px solid #ddd;
+      border-top:4px solid #333;
+      border-radius:50%;
+      animation:spin 1s linear infinite;
+    }
+    @keyframes spin { to { transform:rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <div><b>Losuję kolor manicure…</b></div>
+    <div class="loader"></div>
+  </div>
+
+  <script>
+    const pages = [
+      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-6",
+      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-7",
+      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-8",
+      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-9",
+      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-10",
+      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-11",
+      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-12",
+      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-13",
+      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-14"
+    ];
+
+    // losowanie
+    const randomIndex = Math.floor(Math.random() * pages.length);
+    const randomLink = pages[randomIndex];
+
+    // przekierowanie w tej samej karcie
+    window.location.replace(randomLink);
+  </script>
+
+</body>
+</html>
