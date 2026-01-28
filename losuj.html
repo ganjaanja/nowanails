@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Losuję kolor…</title>
+  <title>Losuję kolor...</title>
 
   <style>
     body{
@@ -21,7 +21,7 @@
       padding:30px;
       border-radius:20px;
       background:white;
-      box-shadow: 0 10px 30px rgba(0,0,0,.08);
+      box-shadow:0 10px 30px rgba(0,0,0,.08);
     }
     .loader{
       margin:18px auto 0;
@@ -36,9 +36,8 @@
   </style>
 </head>
 <body>
-
   <div class="box">
-    <div><b>Losuję kolor manicure…</b></div>
+    <h2>Losuję kolor dla Ciebie…</h2>
     <div class="loader"></div>
   </div>
 
@@ -55,13 +54,13 @@
       "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-14"
     ];
 
-    // losowanie
-    const randomIndex = Math.floor(Math.random() * pages.length);
-    const randomLink = pages[randomIndex];
+    // losuje
+    const randomPage = pages[Math.floor(Math.random() * pages.length)];
 
-    // przekierowanie w tej samej karcie
-    window.location.replace(randomLink);
+    // przenosi w tej samej karcie:
+    setTimeout(() => {
+      window.location.href = randomPage;
+    }, 800);
   </script>
-
 </body>
 </html>
