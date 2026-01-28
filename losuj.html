@@ -52,7 +52,6 @@
   </div>
 
   <script>
-    // lista Twoich stron kolorów (Canva)
     const pages = [
       "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-6",
       "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-7",
@@ -65,7 +64,6 @@
       "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-14"
     ];
 
-    // Logika zapobiegająca powtórzeniom
     const last = localStorage.getItem("nova_last_page");
     let target = pages[Math.floor(Math.random() * pages.length)];
 
@@ -77,10 +75,11 @@
 
     localStorage.setItem("nova_last_page", target);
 
-    // Zmiana: użycie window.open z parametrem "_self"
     setTimeout(() => {
-      window.open(target, "_self");
-    }, 1000); // Wydłużyłem czas do 1s, aby użytkownik zdążył zauważyć, że coś się dzieje
+      // To jest komenda: "Zmień adres bieżącej strony na nowy"
+      // Opera nie traktuje tego jako nowego okna, tylko jako nawigację.
+      window.location.href = target;
+    }, 1000);
   </script>
 </body>
 </html>
