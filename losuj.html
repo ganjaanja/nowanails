@@ -21,13 +21,17 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 16px;
+      gap: 20px;
+      text-align: center;
     }
 
     .txt {
-      letter-spacing: 0.35em;
-      font-size: 12px;
+      letter-spacing: 0.1em;
+      font-size: 24px;
+      font-weight: bold;
       text-transform: uppercase;
+      min-height: 30px;
+      transition: color 0.3s;
     }
 
     .loader {
@@ -39,6 +43,33 @@
       animation: spin 0.8s linear infinite;
     }
 
+    /* Przycisk (domyślnie ukryty) */
+    .btn-retry {
+      display: none; /* Ukryty podczas losowania */
+      margin-top: 10px;
+      padding: 12px 24px;
+      font-size: 14px;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      background-color: transparent;
+      border: 1px solid #4b4b4b;
+      color: #4b4b4b;
+      cursor: pointer;
+      border-radius: 4px;
+      transition: background 0.3s;
+    }
+    .btn-retry:hover {
+      background-color: #e0e0e0;
+    }
+
+    /* Mały tekst informacyjny o przekierowaniu */
+    .info {
+      font-size: 10px;
+      opacity: 0;
+      transition: opacity 0.5s;
+      margin-top: 5px;
+    }
+
     @keyframes spin {
       to { transform: rotate(360deg); }
     }
@@ -47,39 +78,92 @@
 
 <body>
   <div class="wrap">
-    <div class="txt">LOSOWANIE</div>
-    <div class="loader"></div>
+    <div class="txt" id="resultText">LOSOWANIE...</div>
+    
+    <div class="loader" id="spinner"></div>
+
+    <button class="btn-retry" id="btnRetry">Losuj Ponownie</button>
+    
+    <div class="info" id="infoText">Za chwilę nastąpi przekierowanie...</div>
   </div>
 
   <script>
-    const pages = [
-      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-6",
-      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-7",
-      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-8",
-      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-9",
-      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-10",
-      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-11",
-      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-12",
-      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-13",
-      "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-14"
+    // === KONFIGURACJA ===
+    const options = [
+      { name: "Pudrowy Róż", url: "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-6" },
+      { name: "Soczysta Czerwień", url: "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-7" },
+      { name: "Głęboki Granat", url: "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-8" },
+      { name: "Butelkowa Zieleń", url: "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-9" },
+      { name: "Neonowy Żółty", url: "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-10" },
+      { name: "Klasyczny Nude", url: "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-11" },
+      { name: "Brokatowe Złoto", url: "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-12" },
+      { name: "Czarny Mat", url: "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-13" },
+      { name: "Fiolet", url: "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-14" }
     ];
 
-    const last = localStorage.getItem("nova_last_page");
-    let target = pages[Math.floor(Math.random() * pages.length)];
+    const spinDuration = 2500;   // Czas animacji losowania (2.5 sekundy)
+    const redirectDelay = 4000;  // Ile czasu na kliknięcie "Losuj ponownie" (4 sekundy)
 
-    if (last && pages.length > 1) {
-      while (target === last) {
-        target = pages[Math.floor(Math.random() * pages.length)];
+    // Elementy DOM
+    const txtElement = document.getElementById("resultText");
+    const spinner = document.getElementById("spinner");
+    const btnRetry = document.getElementById("btnRetry");
+    const infoText = document.getElementById("infoText");
+
+    // === LOGIKA LOSOWANIA ===
+    const lastUrl = localStorage.getItem("nova_last_page");
+    let winnerIndex = Math.floor(Math.random() * options.length);
+
+    // Unikanie powtórzeń
+    if (lastUrl && options.length > 1) {
+      while (options[winnerIndex].url === lastUrl) {
+        winnerIndex = Math.floor(Math.random() * options.length);
       }
     }
+    
+    const winner = options[winnerIndex];
+    localStorage.setItem("nova_last_page", winner.url);
 
-    localStorage.setItem("nova_last_page", target);
+    // === ANIMACJA ===
+    let counter = 0;
+    const interval = setInterval(() => {
+      const tempIndex = Math.floor(Math.random() * options.length);
+      txtElement.innerText = options[tempIndex].name;
+      counter += 100;
 
-    setTimeout(() => {
-      // To jest komenda: "Zmień adres bieżącej strony na nowy"
-      // Opera nie traktuje tego jako nowego okna, tylko jako nawigację.
-      window.location.href = target;
-    }, 1000);
+      if (counter >= spinDuration) {
+        clearInterval(interval);
+        finalize();
+      }
+    }, 100);
+
+    let redirectTimeout;
+
+    function finalize() {
+      // 1. Pokaż wynik
+      txtElement.innerText = winner.name.toUpperCase();
+      txtElement.style.color = "#000";
+      
+      // 2. Ukryj kółko, pokaż przycisk "Losuj ponownie"
+      spinner.style.display = "none";
+      btnRetry.style.display = "block";
+      
+      // 3. Pokaż dyskretne info, że zaraz samo przejdzie dalej
+      infoText.style.opacity = "0.6";
+
+      // 4. Ustaw automatyczne przekierowanie (jeśli nie kliknie przycisku)
+      redirectTimeout = setTimeout(() => {
+        window.location.href = winner.url;
+      }, redirectDelay);
+    }
+
+    // === KLIKNIĘCIE W "LOSUJ PONOWNIE" ===
+    btnRetry.addEventListener("click", () => {
+      // Anuluj przekierowanie, bo użytkownik chce losować od nowa
+      clearTimeout(redirectTimeout);
+      window.location.reload();
+    });
+
   </script>
 </body>
 </html>
