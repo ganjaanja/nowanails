@@ -65,7 +65,7 @@
       "https://zaproszenienaurodzinyandzi.my.canva.site/nova-nails/page-14"
     ];
 
-    // żeby nie losowało tego samego koloru co ostatnio
+    // Logika zapobiegająca powtórzeniom
     const last = localStorage.getItem("nova_last_page");
     let target = pages[Math.floor(Math.random() * pages.length)];
 
@@ -77,11 +77,10 @@
 
     localStorage.setItem("nova_last_page", target);
 
-    // przekierowanie w TEJ SAMEJ KARCIE
+    // Zmiana: użycie window.open z parametrem "_self"
     setTimeout(() => {
-      window.location.replace(target);
-    }, 500);
+      window.open(target, "_self");
+    }, 1000); // Wydłużyłem czas do 1s, aby użytkownik zdążył zauważyć, że coś się dzieje
   </script>
 </body>
 </html>
-
